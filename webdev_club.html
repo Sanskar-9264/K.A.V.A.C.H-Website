@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebCraft Club — Build. Create. Innovate.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050510;
+    --surface: #0d0d2b;
+    --surface2: #13133a;
+    --accent: #00f5d4;
+    --accent2: #7c3aed;
+    --accent3: #f72585;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --border: rgba(255,255,255,0.07);
+    --glow: 0 0 40px rgba(0,245,212,0.15);
+    --glow2: 0 0 40px rgba(124,58,237,0.2);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    cursor:none;
+  }
+
+  /* Custom cursor */
+  .cursor{position:fixed;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,opacity .2s;mix-blend-mode:difference}
+  .cursor-ring{position:fixed;width:40px;height:40px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .15s ease,width .3s,height .3s,opacity .2s;opacity:.5}
+  body:hover .cursor{opacity:1}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:2px}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:20px 60px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(5,5,16,0.8);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    transition:padding .3s;
+  }
+  nav.scrolled{padding:14px 60px}
+  .logo{
+    font-family:'Syne',sans-serif;
+    font-size:1.4rem;font-weight:800;
+    color:var(--accent);
+    letter-spacing:-0.5px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .logo-icon{
+    width:32px;height:32px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border-radius:8px;
+    display:grid;place-items:center;
+    font-size:14px;
+  }
+  .nav-links{display:flex;gap:36px;list-style:none}
+  .nav-links a{
+    font-size:.85rem;font-weight:500;
+    color:var(--muted);text-decoration:none;
+    letter-spacing:.05em;text-transform:uppercase;
+    transition:color .3s;
+    position:relative;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+    background:var(--accent);
+    transform:scaleX(0);transition:transform .3s;
+  }
+  .nav-links a:hover{color:var(--accent)}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-cta{
+    background:transparent;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    padding:10px 24px;border-radius:6px;
+    font-family:'Syne',sans-serif;font-weight:600;font-size:.8rem;
+    letter-spacing:.1em;text-transform:uppercase;
+    cursor:none;
+    transition:background .3s,color .3s,box-shadow .3s;
+  }
+  .nav-cta:hover{background:var(--accent);color:var(--bg);box-shadow:var(--glow)}
+
+  /* HERO */
+  #hero{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+    padding:100px 60px 60px;
+  }
+  #hero-canvas{position:absolute;inset:0;z-index:0}
+  .hero-content{
+    position:relative;z-index:2;
+    text-align:center;
+    max-width:900px;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(0,245,212,.08);
+    border:1px solid rgba(0,245,212,.2);
+    padding:8px 20px;border-radius:100px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.75rem;color:var(--accent);
+    margin-bottom:32px;
+    animation:fadeUp .8s ease both;
+  }
+  .badge-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+  .hero-title{
+    font-family:'Syne',sans-serif;
+    font-size:clamp(3rem,8vw,7rem);
+    font-weight:800;
+    line-height:.95;
+    letter-spacing:-3px;
+    animation:fadeUp .8s .1s ease both;
+  }
+  .hero-title .line1{display:block;color:var(--text)}
+  .hero-title .line2{
+    display:block;
+    background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-size:200%;
+    animation:gradShift 4s infinite alternate;
+  }
+  @keyframes gradShift{0%{background-position:0%}100%{background-position:100%}}
+  .hero-sub{
+    font-size:1.1rem;color:var(--muted);
+    max-width:520px;margin:24px auto 40px;
+    line-height:1.7;
+    animation:fadeUp .8s .2s ease both;
+  }
+  .hero-btns{
+    display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+    animation:fadeUp .8s .3s ease both;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;border:none;
+    padding:16px 40px;border-radius:8px;
+    font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;
+    letter-spacing:.05em;cursor:none;
+    transition:transform .3s,box-shadow .3s;
+    position:relative;overflow:hidden;
+  }
+  .btn-primary::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+    opacity:0;transition:opacity .3s;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(0,245,212,.3)}
+  .btn-primary:hover::before{opacity:1}
+  .btn-secondary{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:16px 40px;border-radius:8px;
+    font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;
+    cursor:none;
+    transition:border-color .3s,color .3s;
+  }
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .hero-stats{
+    display:flex;gap:60px;justify-content:center;margin-top:80px;
+    animation:fadeUp .8s .4s ease both;
+  }
+  .stat{text-align:center}
+  .stat-num{
+    font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .stat-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+  /* SECTION BASE */
+  section{padding:100px 60px;position:relative}
+  .section-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.75rem;color:var(--accent);
+    letter-spacing:.15em;text-transform:uppercase;
+    margin-bottom:16px;display:block;
+  }
+  .section-title{
+    font-family:'Syne',sans-serif;
+    font-size:clamp(2rem,4vw,3.5rem);
+    font-weight:800;letter-spacing:-1.5px;
+    line-height:1.1;margin-bottom:16px;
+  }
+  .section-sub{color:var(--muted);max-width:500px;line-height:1.7;margin-bottom:60px}
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* EVENTS */
+  #events{background:var(--surface)}
+  .events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+  .event-card{
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:32px;
+    position:relative;overflow:hidden;
+    transition:transform .3s,border-color .3s,box-shadow .3s;
+  }
+  .event-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .4s;
+  }
+  .event-card:hover{transform:translateY(-6px);border-color:rgba(0,245,212,.2);box-shadow:var(--glow)}
+  .event-card:hover::before{transform:scaleX(1)}
+  .event-date{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.75rem;color:var(--accent);
+    background:rgba(0,245,212,.1);
+    padding:6px 14px;border-radius:100px;
+    display:inline-block;margin-bottom:20px;
+  }
+  .event-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:12px}
+  .event-desc{font-size:.9rem;color:var(--muted);line-height:1.6;margin-bottom:20px}
+  .event-meta{display:flex;gap:16px;align-items:center}
+  .event-tag{
+    font-size:.75rem;padding:4px 12px;border-radius:100px;
+    background:rgba(124,58,237,.15);color:var(--accent2);border:1px solid rgba(124,58,237,.2);
+  }
+  .event-seats{font-size:.8rem;color:var(--muted)}
+
+  /* CALENDAR */
+  #calendar{background:var(--bg)}
+  .calendar-wrap{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;padding:40px;max-width:900px;
+  }
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+  .cal-month{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700}
+  .cal-nav{display:flex;gap:8px}
+  .cal-btn{
+    width:36px;height:36px;border-radius:8px;border:1px solid var(--border);
+    background:transparent;color:var(--text);font-size:1rem;
+    cursor:none;transition:border-color .3s,background .3s;
+    display:grid;place-items:center;
+  }
+  .cal-btn:hover{border-color:var(--accent);background:rgba(0,245,212,.1)}
+  .cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
+  .cal-day-name{text-align:center;font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:8px 0}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal-cell{
+    aspect-ratio:1;border-radius:8px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:.85rem;cursor:none;
+    transition:background .3s;position:relative;
+  }
+  .cal-cell.today{background:rgba(0,245,212,.15);color:var(--accent);font-weight:700}
+  .cal-cell.has-event::after{
+    content:'';position:absolute;bottom:6px;
+    width:4px;height:4px;border-radius:50%;background:var(--accent3);
+  }
+  .cal-cell:hover{background:rgba(255,255,255,.05)}
+  .cal-cell.other-month{color:var(--muted);opacity:.4}
+
+  /* ACHIEVEMENTS */
+  #achievements{background:var(--surface)}
+  .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+  .ach-card{
+    background:var(--bg);border:1px solid var(--border);
+    border-radius:16px;padding:32px;
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    transition:transform .3s,box-shadow .3s;
+    position:relative;overflow:hidden;
+  }
+  .ach-card::after{
+    content:'';
+    position:absolute;inset:0;border-radius:16px;
+    background:conic-gradient(from 0deg,var(--accent),var(--accent2),var(--accent3),var(--accent));
+    z-index:-1;opacity:0;transition:opacity .4s;
+    margin:-1px;
+  }
+  .ach-card:hover::after{opacity:1}
+  .ach-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .ach-icon{
+    font-size:3rem;margin-bottom:16px;
+    filter:drop-shadow(0 0 12px rgba(0,245,212,.3));
+  }
+  .ach-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px}
+  .ach-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:16px}
+  .ach-year{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);padding:4px 12px;background:rgba(0,245,212,.1);border-radius:100px}
+
+  /* MEMBERS */
+  #members{background:var(--bg)}
+  .members-header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-bottom:60px}
+  .filter-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .filter-btn{
+    padding:8px 20px;border-radius:100px;border:1px solid var(--border);
+    background:transparent;color:var(--muted);font-size:.8rem;cursor:none;
+    transition:all .3s;font-family:'DM Sans',sans-serif;
+  }
+  .filter-btn.active,.filter-btn:hover{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px}
+  .member-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:28px;text-align:center;
+    transition:transform .3s,box-shadow .3s;
+    position:relative;
+  }
+  .member-card:hover{transform:translateY(-6px);box-shadow:var(--glow2)}
+  .member-avatar{
+    width:80px;height:80px;border-radius:50%;
+    margin:0 auto 16px;
+    position:relative;display:flex;align-items:center;justify-content:center;
+    font-size:2rem;
+    background:linear-gradient(135deg,var(--accent2),var(--accent3));
+    font-family:'Syne',sans-serif;font-weight:800;color:#fff;
+  }
+  .member-avatar .ring{
+    position:absolute;inset:-4px;border-radius:50%;
+    border:2px solid transparent;
+    background:linear-gradient(var(--bg),var(--bg)) padding-box,
+                linear-gradient(135deg,var(--accent),var(--accent2)) border-box;
+  }
+  .member-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:6px}
+  .member-role{
+    font-size:.78rem;font-family:'JetBrains Mono',monospace;
+    color:var(--accent);background:rgba(0,245,212,.1);
+    padding:4px 12px;border-radius:100px;display:inline-block;margin-bottom:12px;
+  }
+  .member-role.lead{background:rgba(247,37,133,.1);color:var(--accent3)}
+  .member-role.senior{background:rgba(124,58,237,.1);color:var(--accent2)}
+  .member-skills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .skill-tag{font-size:.7rem;padding:3px 10px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--muted)}
+  .hierarchy-badge{
+    position:absolute;top:12px;right:12px;
+    font-size:.65rem;font-family:'JetBrains Mono',monospace;
+    background:var(--accent2);color:#fff;
+    padding:3px 8px;border-radius:4px;
+  }
+
+  /* PROJECTS */
+  #projects{background:var(--surface)}
+  .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+  .project-card{
+    background:var(--bg);border:1px solid var(--border);
+    border-radius:16px;overflow:hidden;
+    transition:transform .3s,box-shadow .3s;
+  }
+  .project-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .project-thumb{
+    height:180px;display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+  }
+  .project-thumb canvas{position:absolute;inset:0}
+  .project-thumb-label{
+    position:relative;z-index:1;
+    font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+    opacity:.15;color:#fff;letter-spacing:-2px;
+  }
+  .project-info{padding:24px}
+  .project-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:8px}
+  .project-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:16px}
+  .project-stack{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .stack-tag{font-size:.7rem;padding:3px 10px;border-radius:4px;background:rgba(0,245,212,.08);color:var(--accent);border:1px solid rgba(0,245,212,.15)}
+  .project-link{
+    font-size:.8rem;color:var(--accent);text-decoration:none;
+    font-family:'JetBrains Mono',monospace;
+    transition:opacity .2s;
+  }
+  .project-link:hover{opacity:.7}
+
+  /* GALLERY / TECH STACK */
+  #stack{background:var(--bg);text-align:center}
+  .stack-scroll{
+    display:flex;gap:0;overflow:hidden;margin-top:40px;
+    -webkit-mask:linear-gradient(90deg,transparent,black 10%,black 90%,transparent);
+  }
+  .stack-track{
+    display:flex;gap:32px;animation:scroll 20s linear infinite;
+    white-space:nowrap;min-width:max-content;
+  }
+  .stack-track:nth-child(2){animation-direction:reverse}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tech-pill{
+    display:flex;align-items:center;gap:10px;
+    background:var(--surface);border:1px solid var(--border);
+    padding:12px 24px;border-radius:100px;
+    font-size:.85rem;white-space:nowrap;
+    transition:border-color .3s;
+  }
+  .tech-pill:hover{border-color:var(--accent)}
+  .tech-icon{font-size:1.2rem}
+
+  /* CONTACT */
+  #join{background:linear-gradient(135deg,var(--surface),var(--surface2));position:relative;overflow:hidden}
+  #join::before{
+    content:'';position:absolute;
+    width:600px;height:600px;
+    background:radial-gradient(circle,rgba(0,245,212,.06),transparent 70%);
+    top:-100px;right:-100px;border-radius:50%;
+    pointer-events:none;
+  }
+  .join-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+  .join-form{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:40px}
+  .form-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:8px}
+  .form-sub{font-size:.9rem;color:var(--muted);margin-bottom:32px}
+  .input-group{margin-bottom:20px}
+  .input-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;display:block;font-family:'JetBrains Mono',monospace}
+  .input-field{
+    width:100%;background:var(--surface);
+    border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;color:var(--text);
+    font-family:'DM Sans',sans-serif;font-size:.9rem;
+    transition:border-color .3s,box-shadow .3s;outline:none;
+  }
+  .input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,245,212,.1)}
+  select.input-field{cursor:none}
+  .submit-btn{
+    width:100%;padding:16px;border-radius:8px;border:none;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;
+    cursor:none;transition:transform .3s,box-shadow .3s;
+    letter-spacing:.05em;
+  }
+  .submit-btn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+  .toast{
+    position:fixed;bottom:30px;right:30px;
+    background:var(--accent);color:var(--bg);
+    padding:16px 28px;border-radius:10px;
+    font-family:'Syne',sans-serif;font-weight:700;
+    transform:translateY(100px);opacity:0;
+    transition:all .4s cubic-bezier(.68,-.55,.27,1.55);
+    z-index:1000;font-size:.9rem;
+  }
+  .toast.show{transform:translateY(0);opacity:1}
+
+  /* FOOTER */
+  footer{
+    background:var(--surface);border-top:1px solid var(--border);
+    padding:60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;
+  }
+  .footer-links{display:flex;gap:32px;list-style:none}
+  .footer-links a{font-size:.85rem;color:var(--muted);text-decoration:none;transition:color .3s}
+  .footer-links a:hover{color:var(--accent)}
+  .footer-copy{font-size:.8rem;color:var(--muted)}
+
+  /* ANNOUNCEMENT TICKER */
+  .ticker{
+    background:rgba(0,245,212,.06);
+    border-bottom:1px solid rgba(0,245,212,.1);
+    padding:10px 0;overflow:hidden;position:fixed;top:65px;left:0;right:0;z-index:99;
+  }
+  .ticker-inner{
+    display:flex;gap:60px;animation:scroll 25s linear infinite;
+    white-space:nowrap;min-width:max-content;font-size:.8rem;
+    font-family:'JetBrains Mono',monospace;color:var(--accent);
+  }
+  .ticker-item::before{content:'◆ ';opacity:.5}
+
+  /* Responsive */
+  @media(max-width:768px){
+    nav{padding:16px 24px}
+    nav.scrolled{padding:12px 24px}
+    .nav-links{display:none}
+    section{padding:70px 24px}
+    .hero-stats{gap:32px}
+    .join-inner{grid-template-columns:1fr}
+    footer{padding:40px 24px}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Announcement Ticker -->
+<div class="ticker" id="ticker">
+  <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item">🚀 Hackathon 2025 registrations open!</span>
+    <span class="ticker-item">Web Design Competition — Prize pool ₹50,000</span>
+    <span class="ticker-item">New workshop: React & Three.js this Saturday 10AM</span>
+    <span class="ticker-item">We won Best Club Award 2024!</span>
+    <span class="ticker-item">Open-source project submissions now accepted</span>
+    <span class="ticker-item">🚀 Hackathon 2025 registrations open!</span>
+    <span class="ticker-item">Web Design Competition — Prize pool ₹50,000</span>
+    <span class="ticker-item">New workshop: React & Three.js this Saturday 10AM</span>
+    <span class="ticker-item">We won Best Club Award 2024!</span>
+    <span class="ticker-item">Open-source project submissions now accepted</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="logo">
+    <div class="logo-icon">⟨/⟩</div>
+    WebCraft
+  </div>
+  <ul class="nav-links">
+    <li><a href="#events">Events</a></li>
+    <li><a href="#calendar">Calendar</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#members">Members</a></li>
+    <li><a href="#projects">Projects</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">Join Us</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Est. 2019 · Web Development Club
+    </div>
+    <h1 class="hero-title">
+      <span class="line1">Build Beyond</span>
+      <span class="line2">The Limits</span>
+    </h1>
+    <p class="hero-sub">A community of passionate developers, designers, and creators pushing the boundaries of the web — one pixel at a time.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">Join the Club →</button>
+      <button class="btn-secondary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Our Work</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num counter" data-target="120">0</div><div class="stat-label">Members</div></div>
+      <div class="stat"><div class="stat-num counter" data-target="48">0</div><div class="stat-label">Events Hosted</div></div>
+      <div class="stat"><div class="stat-num counter" data-target="32">0</div><div class="stat-label">Projects Built</div></div>
+      <div class="stat"><div class="stat-num counter" data-target="15">0</div><div class="stat-label">Awards Won</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <div class="reveal">
+    <span class="section-tag">// upcoming</span>
+    <h2 class="section-title">Upcoming Events</h2>
+    <p class="section-sub">From workshops to hackathons — stay in the loop with everything happening at WebCraft.</p>
+  </div>
+  <div class="events-grid reveal">
+    <div class="event-card">
+      <span class="event-date">SAT, JAN 25 · 10:00 AM</span>
+      <h3 class="event-title">React + Three.js Workshop</h3>
+      <p class="event-desc">Deep dive into 3D web experiences using React Three Fiber. Build interactive 3D scenes for the browser.</p>
+      <div class="event-meta"><span class="event-tag">Workshop</span><span class="event-seats">32/40 seats</span></div>
+    </div>
+    <div class="event-card">
+      <span class="event-date">FRI, FEB 7 · 9:00 AM</span>
+      <h3 class="event-title">WebCraft Hackathon 2025</h3>
+      <p class="event-desc">24-hour coding marathon. Build anything web-related. ₹50,000 prize pool across 3 categories.</p>
+      <div class="event-meta"><span class="event-tag">Hackathon</span><span class="event-seats">Open Reg.</span></div>
+    </div>
+    <div class="event-card">
+      <span class="event-date">WED, FEB 19 · 3:00 PM</span>
+      <h3 class="event-title">UI/UX Design Sprint</h3>
+      <p class="event-desc">Collaborate in teams to design a complete app UI in 6 hours. Critique sessions included.</p>
+      <div class="event-meta"><span class="event-tag">Design</span><span class="event-seats">20/30 seats</span></div>
+    </div>
+    <div class="event-card">
+      <span class="event-date">SAT, MAR 8 · 11:00 AM</span>
+      <h3 class="event-title">Open Source Contributions Day</h3>
+      <p class="event-desc">Learn to contribute to real open-source projects. Mentors guide you through your first PR.</p>
+      <div class="event-meta"><span class="event-tag">Open Source</span><span class="event-seats">Unlimited</span></div>
+    </div>
+    <div class="event-card">
+      <span class="event-date">MON, MAR 17 · 5:00 PM</span>
+      <h3 class="event-title">Full-Stack Interview Prep</h3>
+      <p class="event-desc">Mock technical interviews with feedback, DSA patterns, and system design walkthroughs.</p>
+      <div class="event-meta"><span class="event-tag">Career</span><span class="event-seats">15/20 seats</span></div>
+    </div>
+    <div class="event-card">
+      <span class="event-date">SAT, APR 5 · 10:00 AM</span>
+      <h3 class="event-title">Web Performance Masterclass</h3>
+      <p class="event-desc">Core Web Vitals, bundle optimization, lazy loading, and advanced caching strategies.</p>
+      <div class="event-meta"><span class="event-tag">Advanced</span><span class="event-seats">Open Reg.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDAR -->
+<section id="calendar">
+  <div class="reveal">
+    <span class="section-tag">// schedule</span>
+    <h2 class="section-title">Event Calendar</h2>
+    <p class="section-sub">Browse all upcoming and past events at a glance.</p>
+  </div>
+  <div class="calendar-wrap reveal">
+    <div class="cal-header">
+      <span class="cal-month" id="calMonth">January 2025</span>
+      <div class="cal-nav">
+        <button class="cal-btn" id="prevMonth">‹</button>
+        <button class="cal-btn" id="nextMonth">›</button>
+      </div>
+    </div>
+    <div class="cal-days-header">
+      <div class="cal-day-name">Sun</div><div class="cal-day-name">Mon</div>
+      <div class="cal-day-name">Tue</div><div class="cal-day-name">Wed</div>
+      <div class="cal-day-name">Thu</div><div class="cal-day-name">Fri</div>
+      <div class="cal-day-name">Sat</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="reveal">
+    <span class="section-tag">// milestones</span>
+    <h2 class="section-title">Our Achievements</h2>
+    <p class="section-sub">Recognition, wins, and milestones that define who we are.</p>
+  </div>
+  <div class="ach-grid reveal">
+    <div class="ach-card"><div class="ach-icon">🏆</div><div class="ach-title">Best Technical Club</div><div class="ach-desc">Awarded by the university for outstanding technical contributions and student impact.</div><span class="ach-year">2024</span></div>
+    <div class="ach-card"><div class="ach-icon">🥇</div><div class="ach-title">National Hackathon Winners</div><div class="ach-desc">Won 1st place at Smart India Hackathon building an AI-powered civic portal.</div><span class="ach-year">2024</span></div>
+    <div class="ach-card"><div class="ach-icon">🌐</div><div class="ach-title">500+ Students Trained</div><div class="ach-desc">Conducted free workshops reaching over 500 students across departments.</div><span class="ach-year">2023</span></div>
+    <div class="ach-card"><div class="ach-icon">⭐</div><div class="ach-title">Open Source Spotlight</div><div class="ach-desc">Our open source project received 1,200+ GitHub stars and contributions worldwide.</div><span class="ach-year">2023</span></div>
+    <div class="ach-card"><div class="ach-icon">📱</div><div class="ach-title">App of the Month</div><div class="ach-desc">Student team won ProductHunt App of the Month for a campus productivity tool.</div><span class="ach-year">2022</span></div>
+    <div class="ach-card"><div class="ach-icon">🚀</div><div class="ach-title">5 Startups Incubated</div><div class="ach-desc">Club alumni went on to found 5 tech startups, two of which received seed funding.</div><span class="ach-year">2022</span></div>
+  </div>
+</section>
+
+<!-- MEMBERS -->
+<section id="members">
+  <div class="members-header reveal">
+    <div>
+      <span class="section-tag">// the team</span>
+      <h2 class="section-title">Meet Our Members</h2>
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="lead">Leads</button>
+      <button class="filter-btn" data-filter="senior">Senior</button>
+      <button class="filter-btn" data-filter="member">Members</button>
+    </div>
+  </div>
+  <div class="members-grid reveal" id="membersGrid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="reveal">
+    <span class="section-tag">// portfolio</span>
+    <h2 class="section-title">What We've Built</h2>
+    <p class="section-sub">Real-world projects crafted by our members — from concept to deployment.</p>
+  </div>
+  <div class="projects-grid reveal" id="projectsGrid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="stack">
+  <div class="reveal">
+    <span class="section-tag">// technologies</span>
+    <h2 class="section-title">Technologies We Use</h2>
+  </div>
+  <div class="stack-scroll">
+    <div class="stack-track" id="track1"></div>
+    <div class="stack-track" id="track2"></div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section id="join">
+  <div class="join-inner">
+    <div class="reveal">
+      <span class="section-tag">// get involved</span>
+      <h2 class="section-title">Ready to<br>Build With Us?</h2>
+      <p class="section-sub" style="margin-top:16px">Whether you're a beginner or a seasoned developer — WebCraft is your place to grow, connect, and build remarkable things.</p>
+      <div style="margin-top:40px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,245,212,.1);display:grid;place-items:center;font-size:1.1rem;flex-shrink:0">🎯</div>
+          <div><div style="font-family:'Syne',sans-serif;font-weight:600;margin-bottom:4px">Weekly Workshops</div><div style="font-size:.85rem;color:var(--muted)">Hands-on sessions every weekend</div></div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(124,58,237,.1);display:grid;place-items:center;font-size:1.1rem;flex-shrink:0">🤝</div>
+          <div><div style="font-family:'Syne',sans-serif;font-weight:600;margin-bottom:4px">Mentorship Program</div><div style="font-size:.85rem;color:var(--muted)">1-on-1 guidance from senior members</div></div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(247,37,133,.1);display:grid;place-items:center;font-size:1.1rem;flex-shrink:0">💡</div>
+          <div><div style="font-family:'Syne',sans-serif;font-weight:600;margin-bottom:4px">Real Projects</div><div style="font-size:.85rem;color:var(--muted)">Work on products with actual users</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="join-form reveal">
+      <h3 class="form-title">Apply to Join</h3>
+      <p class="form-sub">Fill out this quick form and we'll reach out within 48 hours.</p>
+      <div class="input-group">
+        <label class="input-label">Full Name</label>
+        <input type="text" class="input-field" id="fname" placeholder="Your full name">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Email</label>
+        <input type="email" class="input-field" id="femail" placeholder="you@college.edu">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Year / Branch</label>
+        <input type="text" class="input-field" id="fyear" placeholder="2nd Year · CSE">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Your Interest</label>
+        <select class="input-field" id="finterest">
+          <option value="">Select one...</option>
+          <option>Frontend Development</option>
+          <option>Backend / Full-Stack</option>
+          <option>UI/UX Design</option>
+          <option>Open Source</option>
+          <option>DevOps / Cloud</option>
+          <option>Mobile Development</option>
+        </select>
+      </div>
+      <button class="submit-btn" id="submitBtn">Submit Application →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">⟨/⟩</div>WebCraft</div>
+  <ul class="footer-links">
+    <li><a href="#">GitHub</a></li>
+    <li><a href="#">Instagram</a></li>
+    <li><a href="#">LinkedIn</a></li>
+    <li><a href="#">Discord</a></li>
+    <li><a href="#">Newsletter</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 WebCraft Club. Made with ♥ by the team.</p>
+</footer>
+
+<div class="toast" id="toast">✓ Application sent! We'll be in touch.</div>
+
+<script>
+// ─── CURSOR ───────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.cal-btn,.filter-btn,.event-card,.ach-card,.member-card,.project-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width='60px'; ring.style.height='60px'; cursor.style.opacity='0'; });
+  el.addEventListener('mouseleave', () => { ring.style.width='40px'; ring.style.height='40px'; cursor.style.opacity='1'; });
+});
+
+// ─── NAVBAR SCROLL ──────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  // ticker hide on scroll
+  document.getElementById('ticker').style.opacity = window.scrollY > 80 ? '0' : '1';
+});
+
+// ─── HERO 3D CANVAS ─────────────────────────────────
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.z = Math.random() * 1200 + 200;
+    this.ox = this.x; this.oy = this.y;
+    this.size = (1200 - this.z) / 600;
+    this.speedZ = Math.random() * 1.5 + 0.5;
+    this.color = Math.random() > 0.7 ? '#00f5d4' : Math.random() > 0.5 ? '#7c3aed' : '#f72585';
+    this.alpha = (1200 - this.z) / 1200;
+  }
+  update() {
+    this.z -= this.speedZ;
+    if (this.z <= 0) { this.reset(); return; }
+    this.size = ((1200 - this.z) / 600) * 2;
+    this.alpha = Math.min(1, (1200 - this.z) / 600);
+    this.sx = (this.x - W/2) * (1200/this.z) + W/2;
+    this.sy = (this.y - H/2) * (1200/this.z) + H/2;
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha * 0.7;
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 8; ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.sx, this.sy, Math.max(0.3, this.size), 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+for (let i=0;i<200;i++) particles.push(new Particle());
+
+// Grid lines
+function drawGrid() {
+  ctx.save();
+  ctx.strokeStyle='rgba(0,245,212,0.03)';
+  ctx.lineWidth=1;
+  const step=80;
+  for(let x=0;x<W;x+=step){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=step){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.restore();
+}
+
+let mouseX = W/2, mouseY = H/2;
+document.addEventListener('mousemove', e => { mouseX=e.clientX; mouseY=e.clientY; });
+
+function heroLoop() {
+  ctx.fillStyle='rgba(5,5,16,0.15)';
+  ctx.fillRect(0,0,W,H);
+  drawGrid();
+  particles.forEach(p => { p.update(); p.draw(); });
+  // Mouse glow
+  const grd = ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,250);
+  grd.addColorStop(0,'rgba(0,245,212,0.04)');
+  grd.addColorStop(1,'transparent');
+  ctx.fillStyle=grd;
+  ctx.fillRect(0,0,W,H);
+  requestAnimationFrame(heroLoop);
+}
+heroLoop();
+
+// ─── COUNTERS ──────────────────────────────────────
+function animateCounter(el) {
+  const target = +el.dataset.target;
+  let current = 0;
+  const step = target / 80;
+  const t = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = Math.floor(current) + (el.dataset.suffix||'+');
+    if (current >= target) clearInterval(t);
+  }, 20);
+}
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ animateCounter(e.target); counterObs.unobserve(e.target); }});
+},{threshold:.5});
+document.querySelectorAll('.counter').forEach(el => {
+  el.dataset.suffix = '+';
+  counterObs.observe(el);
+});
+
+// ─── REVEAL ────────────────────────────────────────
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(() => e.target.classList.add('visible'), i*80);
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// ─── CALENDAR ──────────────────────────────────────
+const eventDates = {
+  '2025-1-25':true,'2025-2-7':true,'2025-2-19':true,
+  '2025-3-8':true,'2025-3-17':true,'2025-4-5':true
+};
+let calDate = new Date(2025,0,1);
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function renderCal() {
+  const y=calDate.getFullYear(), m=calDate.getMonth();
+  document.getElementById('calMonth').textContent = `${months[m]} ${y}`;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML='';
+  const first = new Date(y,m,1).getDay();
+  const days = new Date(y,m+1,0).getDate();
+  const today = new Date();
+  for(let i=0;i<first;i++){
+    const c=document.createElement('div');
+    c.className='cal-cell other-month';
+    const d=new Date(y,m,1-first+i);
+    c.textContent=d.getDate();
+    grid.appendChild(c);
+  }
+  for(let d=1;d<=days;d++){
+    const c=document.createElement('div');
+    c.className='cal-cell';
+    c.textContent=d;
+    if(today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d) c.classList.add('today');
+    if(eventDates[`${y}-${m+1}-${d}`]) c.classList.add('has-event');
+    c.title=eventDates[`${y}-${m+1}-${d}`]?'Event scheduled':'';
+    grid.appendChild(c);
+  }
+  const remaining = 42 - first - days;
+  for(let i=1;i<=remaining;i++){
+    const c=document.createElement('div');c.className='cal-cell other-month';c.textContent=i;grid.appendChild(c);
+  }
+}
+renderCal();
+document.getElementById('prevMonth').addEventListener('click',()=>{calDate.setMonth(calDate.getMonth()-1);renderCal();});
+document.getElementById('nextMonth').addEventListener('click',()=>{calDate.setMonth(calDate.getMonth()+1);renderCal();});
+
+// ─── MEMBERS ──────────────────────────────────────
+const members = [
+  {name:'Arjun Sharma',role:'President',tier:'lead',emoji:'A',skills:['React','Node','MongoDB']},
+  {name:'Priya Nair',role:'Vice President',tier:'lead',emoji:'P',skills:['Vue','Python','Design']},
+  {name:'Rohit Kumar',role:'Tech Lead',tier:'lead',emoji:'R',skills:['TypeScript','AWS','Docker']},
+  {name:'Sneha Patel',role:'Design Lead',tier:'lead',emoji:'S',skills:['Figma','CSS','Motion']},
+  {name:'Amit Verma',role:'Senior Dev',tier:'senior',emoji:'A',skills:['Next.js','GraphQL']},
+  {name:'Kavya Reddy',role:'Senior Dev',tier:'senior',emoji:'K',skills:['Flutter','Firebase']},
+  {name:'Dev Mishra',role:'Senior Dev',tier:'senior',emoji:'D',skills:['Rust','WebAssembly']},
+  {name:'Ananya Singh',role:'Senior Design',tier:'senior',emoji:'A',skills:['Framer','Blender']},
+  {name:'Rahul Gupta',role:'Member',tier:'member',emoji:'R',skills:['HTML','CSS','JS']},
+  {name:'Ishaan Joshi',role:'Member',tier:'member',emoji:'I',skills:['Python','Flask']},
+  {name:'Meera Pillai',role:'Member',tier:'member',emoji:'M',skills:['Angular','SCSS']},
+  {name:'Karthik Rao',role:'Member',tier:'member',emoji:'K',skills:['React Native']},
+];
+const tierLabel={lead:'Lead',senior:'Senior',member:'Core'};
+function renderMembers(filter='all'){
+  const grid=document.getElementById('membersGrid');
+  grid.innerHTML='';
+  members.filter(m=>filter==='all'||m.tier===filter).forEach((m,i)=>{
+    const card=document.createElement('div');
+    card.className='member-card';
+    card.style.animationDelay=`${i*.05}s`;
+    card.innerHTML=`
+      <span class="hierarchy-badge">${tierLabel[m.tier]}</span>
+      <div class="member-avatar"><div class="ring"></div>${m.emoji}</div>
+      <div class="member-name">${m.name}</div>
+      <span class="member-role ${m.tier}">${m.role}</span>
+      <div class="member-skills">${m.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+renderMembers();
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMembers(btn.dataset.filter);
+  });
+});
+
+// ─── PROJECTS (with mini canvas art) ─────────────
+const projects=[
+  {title:'CampusConnect',desc:'Real-time campus event platform with live notifications and RSVP system.',stack:['Next.js','Socket.io','PostgreSQL'],color:['#00f5d4','#7c3aed']},
+  {title:'CodeCollab',desc:'Browser-based collaborative code editor with pair programming features.',stack:['React','Monaco','WebRTC'],color:['#f72585','#7c3aed']},
+  {title:'EcoTrack',desc:'Dashboard for tracking college carbon footprint with data visualization.',stack:['Vue','D3.js','Node'],color:['#00f5d4','#f72585']},
+  {title:'StudySync',desc:'AI-powered study planner that adapts to your exam schedule.',stack:['React','Python','ML'],color:['#7c3aed','#00f5d4']},
+  {title:'TechTalks',desc:'Podcast platform built for student-run tech shows with live streaming.',stack:['Svelte','Go','AWS'],color:['#f72585','#00f5d4']},
+  {title:'PortfolioKit',desc:'Open-source template kit for developer portfolios — 3000+ downloads.',stack:['HTML','CSS','JS'],color:['#7c3aed','#f72585']},
+];
+const grid2=document.getElementById('projectsGrid');
+projects.forEach(p=>{
+  const card=document.createElement('div');
+  card.className='project-card';
+  const id='pc'+Math.random().toString(36).slice(2);
+  card.innerHTML=`
+    <div class="project-thumb">
+      <canvas id="${id}" width="400" height="180"></canvas>
+      <span class="project-thumb-label">${p.title.slice(0,2)}</span>
+    </div>
+    <div class="project-info">
+      <div class="project-title">${p.title}</div>
+      <div class="project-desc">${p.desc}</div>
+      <div class="project-stack">${p.stack.map(s=>`<span class="stack-tag">${s}</span>`).join('')}</div>
+      <a href="#" class="project-link">View Project →</a>
+    </div>
+  `;
+  grid2.appendChild(card);
+  // Draw abstract art on each thumb
+  const c=document.getElementById(id);
+  const x=c.getContext('2d');
+  const grd=x.createLinearGradient(0,0,400,180);
+  grd.addColorStop(0,p.color[0]+'22');
+  grd.addColorStop(1,p.color[1]+'22');
+  x.fillStyle=grd;x.fillRect(0,0,400,180);
+  // Animated circles
+  for(let i=0;i<5;i++){
+    const cx2=Math.random()*400,cy2=Math.random()*180,r=20+Math.random()*60;
+    const g2=x.createRadialGradient(cx2,cy2,0,cx2,cy2,r);
+    g2.addColorStop(0,p.color[i%2]+'40');g2.addColorStop(1,'transparent');
+    x.beginPath();x.arc(cx2,cy2,r,0,Math.PI*2);x.fillStyle=g2;x.fill();
+  }
+  // Lines
+  x.strokeStyle=p.color[0]+'30';x.lineWidth=1;
+  for(let i=0;i<8;i++){x.beginPath();x.moveTo(Math.random()*400,0);x.lineTo(Math.random()*400,180);x.stroke();}
+});
+
+// ─── TECH STACK SCROLL ───────────────────────────
+const techs=[
+  {icon:'⚛️',name:'React'},{icon:'🟢',name:'Node.js'},{icon:'⚡',name:'Next.js'},
+  {icon:'🎨',name:'Figma'},{icon:'🐍',name:'Python'},{icon:'☁️',name:'AWS'},
+  {icon:'🐳',name:'Docker'},{icon:'🔷',name:'TypeScript'},{icon:'🎭',name:'Three.js'},
+  {icon:'🔥',name:'Firebase'},{icon:'📊',name:'D3.js'},{icon:'🦀',name:'Rust'},
+];
+const t1=document.getElementById('track1'),t2=document.getElementById('track2');
+[...techs,...techs].forEach(t=>{
+  [t1,t2].forEach((track,i)=>{
+    const pill=document.createElement('div');
+    pill.className='tech-pill';
+    pill.innerHTML=`<span class="tech-icon">${t.icon}</span>${t.name}`;
+    track.appendChild(pill);
+  });
+});
+
+// ─── FORM SUBMIT ─────────────────────────────────
+document.getElementById('submitBtn').addEventListener('click',()=>{
+  const name=document.getElementById('fname').value;
+  const email=document.getElementById('femail').value;
+  if(!name||!email){
+    document.getElementById('fname').style.borderColor='var(--accent3)';
+    document.getElementById('femail').style.borderColor='var(--accent3)';
+    setTimeout(()=>{
+      document.getElementById('fname').style.borderColor='';
+      document.getElementById('femail').style.borderColor='';
+    },1500);
+    return;
+  }
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+  document.getElementById('fname').value='';
+  document.getElementById('femail').value='';
+  document.getElementById('fyear').value='';
+  document.getElementById('finterest').value='';
+});
+</script>
+</body>
+</html>
